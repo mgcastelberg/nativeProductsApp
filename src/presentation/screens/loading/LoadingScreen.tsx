@@ -1,12 +1,12 @@
+import { Button, Layout, Text } from "@ui-kitten/components"
 
-import { Text, View } from 'react-native'
 
 export const LoadingScreen = () => {
     return (
-        <View>
-            <Text>
+        <Layout>
+            <Text category='h1'>
                 LoadingScreen
             </Text>
-        </View>
+        </Layout>
     )
 }
