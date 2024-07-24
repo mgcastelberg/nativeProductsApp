@@ -18,7 +18,7 @@ const Stack = createStackNavigator<RootStackParams>();
 
 export const StackNavigator = () => {
   return (
-    <Stack.Navigator initialRouteName='LoadingScreen' screenOptions={{ headerShown: false }}>
+    <Stack.Navigator initialRouteName='LoginScreen' screenOptions={{ headerShown: false }}>
       <Stack.Screen name="HomeScreen" component={HomeScreen} />
       <Stack.Screen name="LoadingScreen" component={LoadingScreen} />
       <Stack.Screen name="LoginScreen" component={LoginScreen} />
