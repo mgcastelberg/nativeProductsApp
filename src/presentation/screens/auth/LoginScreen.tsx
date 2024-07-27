@@ -5,6 +5,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { MyIcon } from '../../components/ui/MyIcon';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParams } from '../../navigation/StackNavigator';
+import { API_URL, STAGE } from '@env';
 
 // Tomamos de nuestras properties la navegacion
 interface Props extends StackScreenProps<RootStackParams, 'LoginScreen'>{}
@@ -13,6 +14,8 @@ interface Props extends StackScreenProps<RootStackParams, 'LoginScreen'>{}
 export const LoginScreen = ({navigation}:Props) => {
 
     const { height} = useWindowDimensions();
+
+    console.log({ apiUrl: API_URL, stage: STAGE});
 
     return (
         <Layout style={{flex: 1}}>
