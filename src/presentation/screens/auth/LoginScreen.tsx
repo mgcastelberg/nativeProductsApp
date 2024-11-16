@@ -37,7 +37,7 @@ export const LoginScreen = ({navigation}:Props) => {
         Alert.alert('Error', 'Usuario o contraseña incorrectos');
     }
 
-    // console.log({ apiUrl: API_URL, stage: STAGE});
+    console.log({ apiUrl: API_URL, stage: STAGE});
 
     return (
         <Layout style={{flex: 1}}>

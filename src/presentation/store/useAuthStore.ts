@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { User } from "../../domain/entities/user";
 import { AuthStatus } from "../../infraestructure/interfaces/auth.status";
 import { authLogin } from "../../actions/auth/auth";
+import { StorageAdapter } from "../../config/adapters/storage-adapter";
 
 export interface AuthState {
     status: AuthStatus;
@@ -23,9 +24,12 @@ export const useAuthStore = create<AuthState>()( (set, get) => ({
             set({ status: 'unauthenticated', user: undefined, token: undefined });
             return false;
         }
-
+        
         // toDo Save token in local storage
-        console.log({resp});
+        await StorageAdapter.setItem('token',resp.token);
+        // const storedToken = await StorageAdapter.getItem('token');
+        // console.log({'El token:': storedToken});
+        // console.log({resp});
 
         set({ status: 'authenticated', user: resp.user, token: resp.token });
 
