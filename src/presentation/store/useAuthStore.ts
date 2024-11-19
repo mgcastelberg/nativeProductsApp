@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { User } from "../../domain/entities/user";
 import { AuthStatus } from "../../infraestructure/interfaces/auth.status";
-import { authLogin } from "../../actions/auth/auth";
+import { authCheckStatus, authLogin } from "../../actions/auth/auth";
 import { StorageAdapter } from "../../config/adapters/storage-adapter";
 
 export interface AuthState {
@@ -10,6 +10,7 @@ export interface AuthState {
     user?: User
     
     login: (email:string, password:string) => Promise<boolean>;
+    checkStatus: () => Promise<boolean>;
 }
 
 
@@ -31,6 +32,17 @@ export const useAuthStore = create<AuthState>()( (set, get) => ({
         // console.log({'El token:': storedToken});
         // console.log({resp});
 
+        set({ status: 'authenticated', user: resp.user, token: resp.token });
+
+        return true;
+    },
+    checkStatus: async () => {
+        const resp = await authCheckStatus();
+        if (!resp) {
+            set({ status: 'unauthenticated', user: undefined, token: undefined });
+            return false;
+        }
+        await StorageAdapter.setItem('token',resp.token);
         set({ status: 'authenticated', user: resp.user, token: resp.token });
 
         return true;
