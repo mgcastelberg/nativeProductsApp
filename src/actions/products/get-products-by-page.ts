@@ -1,8 +1,9 @@
 import { shopApi } from "../../config/api/shopApi";
+import type { Product } from "../../domain/entities/product";
 import { TesloProduct } from "../../infraestructure/interfaces/teslo-products.response";
 import { ProductMapper } from '../../infraestructure/mappers/product.mapper';
 
-export const getProductsByPage = async(page: number, limit: number = 20) => {
+export const getProductsByPage = async(page: number, limit: number = 20): Promise<Product[]> => {
     console.log({page, limit});
     try {
         const { data } = await shopApi.get<TesloProduct[]>(`/products?offset=${ page * 10 }&limit=${limit}`);

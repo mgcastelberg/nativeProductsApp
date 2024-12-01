@@ -2,24 +2,27 @@
 import { Button, Icon, Layout, Text } from '@ui-kitten/components'
 import { useAuthStore } from '../../store/useAuthStore'
 import { getProductsByPage } from '../../../actions/products/get-products-by-page';
+import { useQuery } from '@tanstack/react-query';
+import { MainLayout } from '../../layouts/MainLayout';
 
 export const HomeScreen = () => {
 
     const { logout } = useAuthStore();
 
-    getProductsByPage(0);
+    // getProductsByPage(0);
+    const { isLoading, data: products = [] } = useQuery({
+        queryKey: ['products','infinite'],
+        staleTime: 1000 * 60 * 60 * 24,
+        queryFn: () => getProductsByPage(0),
+    });
     
     return (
-        <Layout style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Text category='h1'>
-                Home Screen
-            </Text>
-
-            {/* <Icon name='facebook' fill='blue' height={100} /> */}
-
-            <Button onPress={logout} accessoryLeft={<Icon name='log-out-outline' />}>
-                Cerrar sesión
-            </Button>
-        </Layout>
+        <MainLayout title="Tienda" subtitle="Todos los productos"
+            rightAction={ logout }
+            rightActionIcon="log-out-outline"
+            // rightActionIcon="plus-outline"
+        >
+            <Text>Productos</Text>
+        </MainLayout>
     )
 }
