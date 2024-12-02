@@ -4,6 +4,8 @@ import { useAuthStore } from '../../store/useAuthStore'
 import { getProductsByPage } from '../../../actions/products/get-products-by-page';
 import { useQuery } from '@tanstack/react-query';
 import { MainLayout } from '../../layouts/MainLayout';
+import { FullScreenLoader } from '../../components/FullScreenLoader';
+import { ProductList } from '../../components/products/ProductList';
 
 export const HomeScreen = () => {
 
@@ -17,12 +19,21 @@ export const HomeScreen = () => {
     });
     
     return (
-        <MainLayout title="Tienda" subtitle="Todos los productos"
+        <MainLayout 
+            title="Tienda" 
+            subtitle="Todos los productos"
             rightAction={ logout }
             rightActionIcon="log-out-outline"
             // rightActionIcon="plus-outline"
         >
-            <Text>Productos</Text>
+
+            {/* <FullScreenLoader /> */}
+            {
+                isLoading
+                ? (<FullScreenLoader />)
+                : <ProductList products={products} />
+            }
+
         </MainLayout>
     )
 }
