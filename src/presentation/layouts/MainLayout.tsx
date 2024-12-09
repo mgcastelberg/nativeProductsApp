@@ -8,15 +8,15 @@ import { MyIcon } from '../components/ui/MyIcon';
 // recibe componentes como hijos
 interface Props {
     title: string;
-    subtitle: string;
+    subtitle?: string;
 
     rightAction?: () => void;
     rightActionIcon?: string;
 
-    children: React.ReactNode;
+    children?: React.ReactNode;
 }
 
-export const MainLayout = ({title, subtitle,rightAction, rightActionIcon, children}:Props) => {
+export const MainLayout = ({title, subtitle = '',rightAction, rightActionIcon, children}:Props) => {
 
     const {top} = useSafeAreaInsets();
     const { canGoBack, goBack } = useNavigation();
