@@ -11,7 +11,7 @@ export const getProductsByPage = async(page: number, limit: number = 20): Promis
         // const products = data.map(tesloProduct => ProductMapper.tesloProductToEntity(tesloProduct));
         // Version reducida con un solo parametro
         const products = data.map(ProductMapper.tesloProductToEntity);
-        console.log( JSON.stringify(products, null, 2) );
+        // console.log( JSON.stringify(products, null, 2) );
         return products;
     } catch (error) {
         console.log(error);

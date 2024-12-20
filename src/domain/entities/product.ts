@@ -24,6 +24,6 @@ export enum Size {
 export enum Gender {
     Men = 'men',
     Women = 'women',
-    Kids = 'kids',
+    Kid = 'kid',
     Unisex = 'unisex'
 }

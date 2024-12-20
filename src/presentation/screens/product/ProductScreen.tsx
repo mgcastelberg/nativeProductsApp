@@ -4,16 +4,17 @@ import { MainLayout } from '../../layouts/MainLayout'
 import { getProductById } from '../../../actions/products/get-products-by-id';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParams } from '../../navigation/StackNavigator';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { useRef } from 'react';
 import { FlatList, ScrollView } from 'react-native-gesture-handler';
 import { FadeInImage } from '../../components/ui/FadeInImage';
-import { Gender, Size } from '../../../domain/entities/product';
+import { Gender, Product, Size } from '../../../domain/entities/product';
 import { MyIcon } from '../../components/ui/MyIcon';
 import { Formik } from 'formik';
+import { updateCreateProduct } from '../../../actions/products/update-create-product';
 
 const sizes: Size[] = [Size.XS, Size.S, Size.M, Size.L, Size.XL, Size.XXL];
-const genders: Gender[] = [Gender.Men, Gender.Women, Gender.Kids, Gender.Unisex];
+const genders: Gender[] = [Gender.Men, Gender.Women, Gender.Kid, Gender.Unisex];
 
 interface Props extends StackScreenProps<RootStackParams, 'ProductScreen'> {}
 
@@ -30,6 +31,16 @@ export const ProductScreen = ({ route }: Props) => {
         queryFn: () => getProductById(productIdRef.current)
     });
     
+    // toDo UseMutation la mutacion no se llama inmediantamente si no hasta que nosotros lo invocamos
+
+    const mutation = useMutation({
+        mutationFn: (data: Product) => updateCreateProduct({...data, id: productIdRef.current}),
+        onSuccess: (data: Product) => {
+            // console.log('Product updated');
+        }
+    });
+
+    // El orden de esta validacion es importante, al tenerla arriba de la mutacion regresaba un error
     if(!product) {
         return (
             <MainLayout title="Cargando" />
@@ -37,11 +48,10 @@ export const ProductScreen = ({ route }: Props) => {
     }
 
 
-    // toDo UseMutation
     return (
         <Formik
             initialValues={product}
-            onSubmit={ (values) => console.log(values) }
+            onSubmit={ (values) => mutation.mutate(values) }
         >
             {
                 ({ handleChange, handleSubmit, values,errors, setFieldValue }) => (
@@ -96,12 +106,14 @@ export const ProductScreen = ({ route }: Props) => {
                                     style={{ flex: 1 }}
                                     value={ values.price.toString() }
                                     onChangeText={ handleChange('price') }
+                                    keyboardType="numeric"
                                 />
                                 <Input
                                     label="Inventario"
                                     style={{ flex: 1 }}
                                     value={ values.stock.toString() }
                                     onChangeText={ handleChange('stock') }
+                                    keyboardType="numeric"
                                 />
                             </Layout>
 
@@ -150,7 +162,8 @@ export const ProductScreen = ({ route }: Props) => {
 
                             <Button
                                 accessoryLeft={ <MyIcon name='save-outline' white /> }
-                                onPress={() => console.log('Guardar')}
+                                onPress={() => handleSubmit()}
+                                disabled={mutation.isPending}
                                 style={{ marginHorizontal: 10, marginTop: 20 }}
                             >
                                 Guardar
