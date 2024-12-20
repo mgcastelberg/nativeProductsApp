@@ -4,7 +4,7 @@ import { MainLayout } from '../../layouts/MainLayout'
 import { getProductById } from '../../../actions/products/get-products-by-id';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParams } from '../../navigation/StackNavigator';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, QueryClient, useQueryClient } from '@tanstack/react-query';
 import { useRef } from 'react';
 import { FlatList, ScrollView } from 'react-native-gesture-handler';
 import { FadeInImage } from '../../components/ui/FadeInImage';
@@ -24,6 +24,8 @@ export const ProductScreen = ({ route }: Props) => {
     const productIdRef = useRef(route.params.productId);
     // const { productId} = route.params;
     const theme = useTheme();
+    // Se usa para revalidar el producto
+    const QueryClient = useQueryClient();
 
     // toDo UseQuery
     const { data: product } = useQuery({
@@ -37,6 +39,12 @@ export const ProductScreen = ({ route }: Props) => {
         mutationFn: (data: Product) => updateCreateProduct({...data, id: productIdRef.current}),
         onSuccess: (data: Product) => {
             // console.log('Product updated');
+            productIdRef.current = data.id;
+            // esta parte es para revalidar el products infinite del home screen
+            QueryClient.invalidateQueries({ queryKey: ['products', 'infinite'] });
+            QueryClient.invalidateQueries({ queryKey: ['product', data.id] });
+            // otra forma es actualizarlo
+            // QueryClient.setQueryData(['product', data.id], data);
         }
     });
 
