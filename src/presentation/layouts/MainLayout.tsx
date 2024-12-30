@@ -51,7 +51,8 @@ export const MainLayout = ({title, subtitle = '',rightAction, rightActionIcon, c
           accessoryRight={ () => <RenderRightAction/> }
         />
         <Divider />
-        <Layout style={{ height: '100%', backgroundColor: 'gainsboro' }}>
+        {/* <Layout style={{ height: '100%', backgroundColor: 'gainsboro' }}> */}
+        <Layout style={{ height: '100%', backgroundColor: 'transparent' }}>
             {children}
         </Layout>
       </Layout>

@@ -12,6 +12,7 @@ import { Gender, Product, Size } from '../../../domain/entities/product';
 import { MyIcon } from '../../components/ui/MyIcon';
 import { Formik } from 'formik';
 import { updateCreateProduct } from '../../../actions/products/update-create-product';
+import { Image } from 'react-native';
 
 const sizes: Size[] = [Size.XS, Size.S, Size.M, Size.L, Size.XL, Size.XXL];
 const genders: Gender[] = [Gender.Men, Gender.Women, Gender.Kid, Gender.Unisex];
@@ -67,20 +68,26 @@ export const ProductScreen = ({ route }: Props) => {
                     <MainLayout title={values.title} subtitle={`Precio: ${values.price.toString()}`}>
                         <ScrollView style={{ flex: 1}}>
                             {/* Imagenes del Producto */}
-                            <Layout>
+                            <Layout style={{ marginTop: 20 , justifyContent: 'center', alignItems: 'center' }}>
                                 {/* tener en considearacion cuando no tenemos imagenes */}
-                                <FlatList
-                                    data={values.images}
-                                    keyExtractor={(item) => item}
-                                    horizontal
-                                    showsHorizontalScrollIndicator={false}
-                                    renderItem={({ item }) => (
-                                        <FadeInImage
-                                            uri={item}
-                                            style={{ width: 300, height: 300, marginHorizontal: 7 }}
+                                {
+                                    values.images.length === 0 
+                                    ? <Image source={ require ('../../../assets/no-product-image.png') } style={{ width: 300, height: 300 }} />
+                                    : (
+                                        <FlatList
+                                            data={values.images}
+                                            keyExtractor={(item) => item}
+                                            horizontal
+                                            showsHorizontalScrollIndicator={false}
+                                            renderItem={({ item }) => (
+                                                <FadeInImage
+                                                    uri={item}
+                                                    style={{ width: 300, height: 300, marginHorizontal: 7 }}
+                                                />
+                                            )}
                                         />
-                                    )}
-                                />
+                                      )
+                                }
                             </Layout>
 
                             {/* formulario del producto */}
@@ -101,7 +108,7 @@ export const ProductScreen = ({ route }: Props) => {
                                     label="Descripcion"
                                     multiline
                                     numberOfLines={5}
-                                    style={{ marginVertical: 5 }}
+                                    style={{ marginVertical: 5, textAlignVertical: 'top' }}
                                     value={ values.description }
                                     onChangeText={ handleChange('description') }
                                 />
