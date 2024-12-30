@@ -6,10 +6,15 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { MainLayout } from '../../layouts/MainLayout';
 import { FullScreenLoader } from '../../components/FullScreenLoader';
 import { ProductList } from '../../components/products/ProductList';
+import { FAB } from '../../components/ui/FAB';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { RootStackParams } from '../../navigation/StackNavigator';
 
 export const HomeScreen = () => {
 
     const { logout } = useAuthStore();
+
+    const navigation = useNavigation<NavigationProp<RootStackParams>>();
 
     // getProductsByPage(0);
     // const { isLoading, data: products = [] } = useQuery({
@@ -30,26 +35,37 @@ export const HomeScreen = () => {
     });
     
     return (
-        <MainLayout 
-            title="Tienda" 
-            subtitle="Todos los productos"
-            rightAction={ logout }
-            rightActionIcon="log-out-outline"
-            // rightActionIcon="plus-outline"
-        >
+        <>
+            <MainLayout 
+                title="Tienda" 
+                subtitle="Todos los productos"
+                rightAction={ logout }
+                rightActionIcon="log-out-outline"
+                // rightActionIcon="plus-outline"
+            >
 
-            {/* <FullScreenLoader /> */}
-            {
-                isLoading
-                ? (<FullScreenLoader />)
-                : (
-                    <ProductList 
-                        products={data?.pages.flat() || []}
-                        fetchNextPage={fetchNextPage}
-                    />
-                  )
-            }
+                {/* <FullScreenLoader /> */}
+                {
+                    isLoading
+                    ? (<FullScreenLoader />)
+                    : (
+                        <ProductList 
+                            products={data?.pages.flat() || []}
+                            fetchNextPage={fetchNextPage}
+                        />
+                    )
+                }
 
-        </MainLayout>
+            </MainLayout>
+            <FAB 
+                iconName='plus-outline'
+                onPress={() => navigation.navigate('ProductScreen', { productId: 'new' })}  
+                style={{ 
+                    position: 'absolute', 
+                    bottom: 30, 
+                    right: 20 
+                }}
+            />
+        </>
     )
 }
