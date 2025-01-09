@@ -1,18 +1,18 @@
 
+import { useRef } from 'react';
 import { Button, ButtonGroup, Input, Layout, Text, useTheme } from '@ui-kitten/components'
 import { MainLayout } from '../../layouts/MainLayout'
-import { getProductById } from '../../../actions/products/get-products-by-id';
+
+import { getProductById, updateCreateProduct } from '../../../actions/products';
+
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParams } from '../../navigation/StackNavigator';
 import { useMutation, useQuery, QueryClient, useQueryClient } from '@tanstack/react-query';
-import { useRef } from 'react';
-import { FlatList, ScrollView } from 'react-native-gesture-handler';
-import { FadeInImage } from '../../components/ui/FadeInImage';
+import { ScrollView } from 'react-native-gesture-handler';
 import { Gender, Product, Size } from '../../../domain/entities/product';
 import { MyIcon } from '../../components/ui/MyIcon';
 import { Formik } from 'formik';
-import { updateCreateProduct } from '../../../actions/products/update-create-product';
-import { Image } from 'react-native';
+import { ProductImages } from '../../components/products/ProductImages';
 
 const sizes: Size[] = [Size.XS, Size.S, Size.M, Size.L, Size.XL, Size.XXL];
 const genders: Gender[] = [Gender.Men, Gender.Women, Gender.Kid, Gender.Unisex];
@@ -69,25 +69,7 @@ export const ProductScreen = ({ route }: Props) => {
                         <ScrollView style={{ flex: 1}}>
                             {/* Imagenes del Producto */}
                             <Layout style={{ marginTop: 20 , justifyContent: 'center', alignItems: 'center' }}>
-                                {/* tener en considearacion cuando no tenemos imagenes */}
-                                {
-                                    values.images.length === 0 
-                                    ? <Image source={ require ('../../../assets/no-product-image.png') } style={{ width: 300, height: 300 }} />
-                                    : (
-                                        <FlatList
-                                            data={values.images}
-                                            keyExtractor={(item) => item}
-                                            horizontal
-                                            showsHorizontalScrollIndicator={false}
-                                            renderItem={({ item }) => (
-                                                <FadeInImage
-                                                    uri={item}
-                                                    style={{ width: 300, height: 300, marginHorizontal: 7 }}
-                                                />
-                                            )}
-                                        />
-                                      )
-                                }
+                                <ProductImages images={values.images} />
                             </Layout>
 
                             {/* formulario del producto */}
@@ -184,9 +166,9 @@ export const ProductScreen = ({ route }: Props) => {
                                 Guardar
                             </Button>
 
-                            <Text>
+                            {/* <Text>
                                 {JSON.stringify(values, null, 2)}
-                            </Text>
+                            </Text> */}
 
                             <Layout style={{ height: 200 }}>
 
