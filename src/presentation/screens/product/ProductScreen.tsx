@@ -65,7 +65,12 @@ export const ProductScreen = ({ route }: Props) => {
             {
                 ({ handleChange, handleSubmit, values,errors, setFieldValue }) => (
                     // JSX
-                    <MainLayout title={values.title} subtitle={`Precio: ${values.price.toString()}`}>
+                    <MainLayout 
+                        title={values.title} 
+                        subtitle={`Precio: ${values.price.toString()}`}
+                        rightAction={ ()=> console.log('Hola mundo')}   
+                        rightActionIcon='camera-outline' 
+                    >
                         <ScrollView style={{ flex: 1}}>
                             {/* Imagenes del Producto */}
                             <Layout style={{ marginTop: 20 , justifyContent: 'center', alignItems: 'center' }}>
