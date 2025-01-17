@@ -70,7 +70,8 @@ export const ProductScreen = ({ route }: Props) => {
                         title={values.title} 
                         subtitle={`Precio: ${values.price.toString()}`}
                         rightAction={ async() => {
-                            const photos = await CameraAdapter.takePicture();
+                            // const photos = await CameraAdapter.takePicture(); //obtener de la camara
+                            const photos = await CameraAdapter.getPicturesFromGallery(); //obtener de la galeria
                             console.log({photos});
                             setFieldValue('images', [...values.images, ...photos]);
                         }}
