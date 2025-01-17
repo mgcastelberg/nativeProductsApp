@@ -1,8 +1,6 @@
 import { isAxiosError } from "axios";
 import { shopApi } from "../../config/api/shopApi";
 import { Product } from "../../domain/entities/product";
-import { TesloProduct } from "../../infraestructure/interfaces/teslo-products.response";
-import { create } from 'zustand';
 
 
 // Partial premite que todas las propiedades del producto sean opcionales
@@ -33,7 +31,7 @@ export const updateCreateProduct = async(product: Partial<Product>) => {
     const {id, images = [], ...rest} = product;
 
     try {
-        const checkedImages = prepareImages(images);
+        const checkedImages = await prepareImages(images);
 
         console.log({checkedImages});
 
@@ -59,7 +57,7 @@ const createProduct = async(product: Partial<Product>) => {
     const {id, images = [], ...rest} = product;
 
     try {
-        const checkedImages = prepareImages(images);
+        const checkedImages = await prepareImages(images);
 
         // const { data } = await shopApi.patch<TesloProduct>(`/products/${id}`, {
         const { data } = await shopApi.post(`/products`, {
@@ -77,12 +75,35 @@ const createProduct = async(product: Partial<Product>) => {
     }
 }
 
-const prepareImages = ( images: string[] ) => {
+const prepareImages = async( images: string[] ) => {
 
     // toDo revisar los FILES
+    const fileImages = images.filter( image => image.includes('file://') );
+    const currentImages = images.filter( image => !image.includes('file://') );
+
+    if( fileImages.length > 0 ) {
+        const uploadPromises = fileImages.map( image => uploadImage(image) );
+        const uploadedImages = await Promise.all(uploadPromises);
+        currentImages.push(...uploadedImages);
+    }
     
-    return images.map( image => {
+    return currentImages.map( image => {
         return image.split('/').pop();
     });
 
+}
+
+const uploadImage = async( image: string ) => {
+    const formData = new FormData();
+    formData.append('file', {
+        uri: image,
+        type: 'image/jpeg',
+        name: image.split('/').pop()
+    });
+    const { data } = await shopApi.post<{image:string}>('/files/product', formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    });
+    return data.image;
 }
